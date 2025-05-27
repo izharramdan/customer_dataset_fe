@@ -32,7 +32,6 @@ export default function CustomerTable() {
   const [data, setData] = useState<Customer[]>([]);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Update URL when page or search changes
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
@@ -40,11 +39,10 @@ export default function CustomerTable() {
     router.replace(`?${params.toString()}`);
   }, [page, search]);
 
-  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllCustomers(page, 10, search); // ⬅️ Search dikirim ke backend
+        const res = await getAllCustomers(page, 10, search);
         setData(res.data);
         setTotalPages(res.totalPages);
       } catch (error) {
@@ -79,33 +77,36 @@ export default function CustomerTable() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const newSearch = formData.get("search")?.toString().trim() || "";
-    setPage(1); // reset ke page pertama
+    setPage(1);
     setSearch(newSearch);
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Customer Table</h2>
+    <div className="p-8 max-w-7xl mx-auto">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">Customer Table</h2>
 
-      {/* 🔍 Search Input */}
-      <form onSubmit={handleSearch} className="mb-4 flex gap-2">
+      {/* Search Input */}
+      <form onSubmit={handleSearch} className="mb-6 flex gap-3 items-center">
         <input
           type="text"
           name="search"
           defaultValue={search}
           placeholder="Search name or email..."
-          className="border px-3 py-2 rounded w-full max-w-md"
+          className="border border-gray-300 rounded-md px-4 py-2 text-sm w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button className="bg-blue-600 text-white px-4 py-2 rounded">Search</button>
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm">
+          Search
+        </button>
       </form>
 
-      <div className="overflow-x-auto shadow-md rounded-lg">
-        <table className="min-w-full text-sm text-left text-gray-700 bg-white">
-          <thead className="text-xs text-gray-600 uppercase bg-gray-100 border-b">
+      {/* Table */}
+      <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <table className="min-w-full text-sm text-gray-800">
+          <thead className="text-xs bg-gray-100 text-gray-600 uppercase border-b">
             {table.getHeaderGroups().map((hg) => (
               <tr key={hg.id}>
                 {hg.headers.map((header) => (
-                  <th key={header.id} className="px-5 py-3">
+                  <th key={header.id} className="px-5 py-3 text-left">
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
@@ -116,7 +117,9 @@ export default function CustomerTable() {
             {table.getRowModel().rows.map((row, rowIndex) => (
               <tr
                 key={row.id}
-                className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-100"}
+                className={`transition-colors ${
+                  rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"
+                } hover:bg-blue-50`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="px-5 py-3 border-t">
@@ -130,26 +133,31 @@ export default function CustomerTable() {
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-between mt-6">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <span className="text-sm text-gray-700">
-          Page <span className="font-semibold">{page}</span> of{" "}
-          <span className="font-semibold">{totalPages}</span>
-        </span>
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
-      </div>
+      <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
+  {/* Previous Button */}
+  <button
+    disabled={page === 1}
+    onClick={() => setPage((p) => Math.max(p - 1, 1))}
+    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition"
+  >
+    Previous
+  </button>
+
+  {/* Page Info */}
+  <div className="text-sm text-gray-800 bg-gray-100 px-4 py-2 rounded-md shadow-sm font-medium">
+    Page <span className="text-blue-600 font-bold">{page}</span> of{" "}
+    <span className="text-blue-600 font-bold">{totalPages}</span>
+  </div>
+
+  {/* Next Button */}
+  <button
+    disabled={page === totalPages}
+    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition"
+  >
+    Next
+  </button>
+</div>
     </div>
   );
 }
