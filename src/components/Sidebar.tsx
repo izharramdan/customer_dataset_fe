@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import Logo from "../../public/higo-logo.png";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -12,9 +14,12 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-full sm:w-64 h-full p-6 bg-blue-50 border-r border-blue-200 shadow-md">
-      <div className="text-2xl font-semibold text-blue-800 mb-8 tracking-wide">
-        📊 Dashboard
+    <aside className="w-full sm:w-64 h-screen sticky top-0 p-6 bg-blue-50 border-r border-blue-200 shadow-md">
+      <div className="flex items-center gap-3 mb-8">
+        <Image src={Logo} alt="Higo Logo" width={40} height={40} />
+        <span className="text-xl font-semibold text-blue-800 tracking-wide">
+          Dashboard
+        </span>
       </div>
 
       <nav className="space-y-2">

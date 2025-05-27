@@ -82,82 +82,88 @@ export default function CustomerTable() {
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Customer Table</h2>
+    <div className="w-full">
+      <div className="rounded-md">
+        {/* Search Input */}
+        <form onSubmit={handleSearch} className="mb-6 flex gap-3 items-center">
+          <input
+            type="text"
+            name="search"
+            defaultValue={search}
+            placeholder="Search name or email..."
+            className="border border-gray-300 rounded-md px-4 py-2 text-sm w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm">
+            Search
+          </button>
+        </form>
 
-      {/* Search Input */}
-      <form onSubmit={handleSearch} className="mb-6 flex gap-3 items-center">
-        <input
-          type="text"
-          name="search"
-          defaultValue={search}
-          placeholder="Search name or email..."
-          className="border border-gray-300 rounded-md px-4 py-2 text-sm w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm">
-          Search
-        </button>
-      </form>
+        {/* Table */}
+        <div className="overflow-x-auto bg-white rounded-lg shadow border">
+          <table className="min-w-full text-sm text-gray-800">
+            <thead className="text-xs bg-gray-100 text-gray-600 uppercase border-b">
+              {table.getHeaderGroups().map((hg) => (
+                <tr key={hg.id}>
+                  {hg.headers.map((header) => (
+                    <th key={header.id} className="px-5 py-3 text-left">
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row, rowIndex) => (
+                <tr
+                  key={row.id}
+                  className={`transition-colors ${
+                    rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } hover:bg-blue-50`}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="px-5 py-3 border-t">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full text-sm text-gray-800">
-          <thead className="text-xs bg-gray-100 text-gray-600 uppercase border-b">
-            {table.getHeaderGroups().map((hg) => (
-              <tr key={hg.id}>
-                {hg.headers.map((header) => (
-                  <th key={header.id} className="px-5 py-3 text-left">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row, rowIndex) => (
-              <tr
-                key={row.id}
-                className={`transition-colors ${
-                  rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"
-                } hover:bg-blue-50`}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-5 py-3 border-t">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* Pagination Controls */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
+          {/* Previous Button */}
+          <button
+            disabled={page === 1}
+            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition text-sm"
+          >
+            Previous
+          </button>
+
+          {/* Page Info */}
+          <div className="text-sm text-gray-800 bg-gray-100 px-4 py-2 rounded-md shadow-sm font-medium">
+            Page <span className="text-blue-600 font-bold">{page}</span> of{" "}
+            <span className="text-blue-600 font-bold">{totalPages}</span>
+          </div>
+
+          {/* Next Button */}
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition text-sm"
+          >
+            Next
+          </button>
+        </div>
       </div>
-
-      {/* Pagination Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
-  {/* Previous Button */}
-  <button
-    disabled={page === 1}
-    onClick={() => setPage((p) => Math.max(p - 1, 1))}
-    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition"
-  >
-    Previous
-  </button>
-
-  {/* Page Info */}
-  <div className="text-sm text-gray-800 bg-gray-100 px-4 py-2 rounded-md shadow-sm font-medium">
-    Page <span className="text-blue-600 font-bold">{page}</span> of{" "}
-    <span className="text-blue-600 font-bold">{totalPages}</span>
-  </div>
-
-  {/* Next Button */}
-  <button
-    disabled={page === totalPages}
-    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition"
-  >
-    Next
-  </button>
-</div>
     </div>
   );
 }
