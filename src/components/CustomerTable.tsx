@@ -145,7 +145,7 @@ export default function CustomerTable() {
             onClick={() => setPage((p) => Math.max(p - 1, 1))}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition text-sm"
           >
-            Previous
+            {"<"}
           </button>
 
           {/* Page Info */}
@@ -160,7 +160,7 @@ export default function CustomerTable() {
             onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed transition text-sm"
           >
-            Next
+            {">"}
           </button>
         </div>
       </div>
