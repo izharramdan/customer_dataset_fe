@@ -37,7 +37,7 @@ export default function CustomerTable() {
     params.set("page", page.toString());
     params.set("search", search);
     router.replace(`?${params.toString()}`);
-  }, [page, search]);
+  }, [page, search, router, searchParams]);
 
   useEffect(() => {
     const fetchData = async () => {
